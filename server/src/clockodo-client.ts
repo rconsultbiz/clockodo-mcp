@@ -120,6 +120,12 @@ export class ClockodoClient {
     return this.request<{ success: boolean }>("DELETE", `/v2/entries/${id}`);
   }
 
+  // --- Users ---
+
+  async getUsers() {
+    return this.request<{ users: User[] }>("GET", "/v2/users");
+  }
+
   // --- Customers ---
 
   async getCustomers() {
@@ -189,6 +195,12 @@ export interface Entry {
   projects_name?: string;
   services_name?: string;
   users_name?: string;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  active: boolean;
 }
 
 export interface Customer {

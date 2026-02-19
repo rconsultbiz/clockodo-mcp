@@ -40,9 +40,11 @@ function formatDateTime(iso: string | null): string {
   });
 }
 
-// Helper: convert date + time to Clockodo format "YYYY-MM-DD HH:MM:SS"
+// Helper: convert date + time (local) to Clockodo ISO 8601 UTC format
+// Clockodo expects UTC times with Z suffix, e.g. "2026-02-19T09:00:00Z"
 function toClockodoDateTime(date: string, time: string): string {
-  return `${date} ${time}:00`;
+  const local = new Date(`${date}T${time}:00`);
+  return local.toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
 // Helper: get today as YYYY-MM-DD
@@ -68,8 +70,8 @@ server.tool(
     const from = date_from || today();
     const to = date_to || today();
     const result = await client.getEntries({
-      time_since: `${from} 00:00:00`,
-      time_until: `${to} 23:59:59`,
+      time_since: toClockodoDateTime(from, "00:00"),
+      time_until: toClockodoDateTime(to, "23:59"),
     });
 
     if (result.entries.length === 0) {
@@ -83,13 +85,19 @@ server.tool(
       };
     }
 
+    // Resolve user names
+    const usersResult = await client.getUsers();
+    const userMap = new Map(usersResult.users.map((u) => [u.id, u.name]));
+
     const lines = result.entries.map((e) => {
       const von = formatDateTime(e.time_since);
       const bis = formatDateTime(e.time_until);
       const dauer = formatDuration(e.duration);
+      const userName = e.users_name || userMap.get(e.users_id) || String(e.users_id);
       return (
         `ID: ${e.id} | ${von} - ${bis} | ${dauer}\n` +
-        `  Kunde: ${e.customers_name || e.customers_id} | ` +
+        `  Mitarbeiter: ${userName} | ` +
+        `Kunde: ${e.customers_name || e.customers_id} | ` +
         `Projekt: ${e.projects_name || e.projects_id || "-"} | ` +
         `Leistung: ${e.services_name || e.services_id}\n` +
         `  Text: ${e.text || "-"} | Abrechenbar: ${e.billable === 1 ? "Ja" : e.billable === 2 ? "Abgerechnet" : "Nein"}`
