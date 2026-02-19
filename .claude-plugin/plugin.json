@@ -1,0 +1,8 @@
+{
+  "name": "clockodo",
+  "description": "Clockodo Zeiterfassung - Zeiteinträge per natürlicher Sprache anlegen, ändern und löschen",
+  "version": "1.0.0",
+  "author": {
+    "name": "RConsult"
+  }
+}
