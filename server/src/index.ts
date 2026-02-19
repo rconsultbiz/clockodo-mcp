@@ -40,9 +40,9 @@ function formatDateTime(iso: string | null): string {
   });
 }
 
-// Helper: convert local date + time strings to ISO UTC
-function toIsoUtc(date: string, time: string): string {
-  return new Date(`${date}T${time}:00`).toISOString();
+// Helper: convert date + time to Clockodo format "YYYY-MM-DD HH:MM:SS"
+function toClockodoDateTime(date: string, time: string): string {
+  return `${date} ${time}:00`;
 }
 
 // Helper: get today as YYYY-MM-DD
@@ -147,8 +147,8 @@ server.tool(
       customers_id,
       services_id,
       billable: billable === false ? 0 : 1,
-      time_since: toIsoUtc(date, time_from),
-      time_until: toIsoUtc(date, time_until),
+      time_since: toClockodoDateTime(date, time_from),
+      time_until: toClockodoDateTime(date, time_until),
       projects_id,
       text,
     });
@@ -202,8 +202,8 @@ server.tool(
     if (projects_id !== undefined) params.projects_id = projects_id;
     if (text !== undefined) params.text = text;
     if (billable !== undefined) params.billable = billable ? 1 : 0;
-    if (date && time_from) params.time_since = toIsoUtc(date, time_from);
-    if (date && time_until) params.time_until = toIsoUtc(date, time_until);
+    if (date && time_from) params.time_since = toClockodoDateTime(date, time_from);
+    if (date && time_until) params.time_until = toClockodoDateTime(date, time_until);
 
     const result = await client.editEntry(entry_id, params);
     const e = result.entry;
