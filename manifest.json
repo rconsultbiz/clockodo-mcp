@@ -1,0 +1,24 @@
+{
+  "manifest_version": "0.2",
+  "name": "clockodo",
+  "version": "1.0.0",
+  "description": "Clockodo Zeiterfassung — Zeiteinträge verwalten, Stoppuhr steuern, Kunden und Projekte abfragen.",
+  "author": {
+    "name": "RConsult.biz GmbH"
+  },
+  "license": "MIT",
+  "server": {
+    "type": "node",
+    "entry_point": "server/dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/dist/index.js"
+      ],
+      "env": {
+        "CLOCKODO_API_USER": "${CLOCKODO_API_USER}",
+        "CLOCKODO_API_KEY": "${CLOCKODO_API_KEY}"
+      }
+    }
+  }
+}

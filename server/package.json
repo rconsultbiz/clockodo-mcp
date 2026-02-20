@@ -1,8 +1,11 @@
 {
   "name": "clockodo-mcp-server",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "type": "module",
+  "bin": {
+    "clockodo-mcp-server": "dist/index.js"
+  },
   "scripts": {
     "start": "tsx src/index.ts",
     "build": "tsc"

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { config } from "dotenv";
@@ -66,6 +67,7 @@ server.tool(
       .optional()
       .describe("Enddatum im Format YYYY-MM-DD (Standard: heute)"),
   },
+  { readOnlyHint: true, destructiveHint: false },
   async ({ date_from, date_to }) => {
     const from = date_from || today();
     const to = date_to || today();
@@ -141,6 +143,7 @@ server.tool(
       .optional()
       .describe("Abrechenbar? (Standard: true)"),
   },
+  { readOnlyHint: false, destructiveHint: false },
   async ({
     customers_id,
     services_id,
@@ -193,6 +196,7 @@ server.tool(
     text: z.string().optional().describe("Neuer Kommentar/Beschreibung"),
     billable: z.boolean().optional().describe("Abrechenbar?"),
   },
+  { readOnlyHint: false, destructiveHint: false },
   async ({
     entry_id,
     customers_id,
@@ -237,6 +241,7 @@ server.tool(
   {
     entry_id: z.number().describe("ID des zu löschenden Zeiteintrags"),
   },
+  { readOnlyHint: false, destructiveHint: true },
   async ({ entry_id }) => {
     await client.deleteEntry(entry_id);
     return {
@@ -255,6 +260,7 @@ server.tool(
   "clockodo_list_customers",
   "Alle Kunden auflisten. Gibt ID und Name aller aktiven Kunden zurück. Nutze dieses Tool um die richtige Kunden-ID für andere Aktionen zu finden.",
   {},
+  { readOnlyHint: true, destructiveHint: false },
   async () => {
     const result = await client.getCustomers();
     const active = result.customers.filter((c) => c.active);
@@ -275,6 +281,7 @@ server.tool(
   "clockodo_list_services",
   "Alle Leistungen/Services auflisten. Gibt ID und Name aller aktiven Leistungen zurück. Nutze dieses Tool um die richtige Service-ID für andere Aktionen zu finden.",
   {},
+  { readOnlyHint: true, destructiveHint: false },
   async () => {
     const result = await client.getServices();
     const active = result.services.filter((s) => s.active);
@@ -300,6 +307,7 @@ server.tool(
       .optional()
       .describe("Kunden-ID zum Filtern (optional)"),
   },
+  { readOnlyHint: true, destructiveHint: false },
   async ({ customer_id }) => {
     const result = await client.getProjects(customer_id);
     const active = result.projects.filter((p) => p.active);
@@ -325,6 +333,7 @@ server.tool(
   "clockodo_get_clock",
   "Laufende Stoppuhr abrufen. Zeigt an, ob gerade eine Zeiterfassung per Stoppuhr läuft und welche.",
   {},
+  { readOnlyHint: true, destructiveHint: false },
   async () => {
     const result = await client.getClock();
     if (!result.running) {
@@ -365,6 +374,7 @@ server.tool(
       .optional()
       .describe("Abrechenbar? (Standard: true)"),
   },
+  { readOnlyHint: false, destructiveHint: false },
   async ({ customers_id, services_id, projects_id, text, billable }) => {
     const result = await client.startClock({
       customers_id,
@@ -396,6 +406,7 @@ server.tool(
   {
     entry_id: z.number().describe("ID des laufenden Eintrags (aus clockodo_get_clock)"),
   },
+  { readOnlyHint: false, destructiveHint: false },
   async ({ entry_id }) => {
     const result = await client.stopClock(entry_id);
     const e = result.stopped;

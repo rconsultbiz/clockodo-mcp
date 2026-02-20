@@ -1,0 +1,24 @@
+# Source files (dist is already compiled)
+server/src/
+
+# Dev dependencies (not needed at runtime)
+server/node_modules/typescript/
+server/node_modules/tsx/
+server/node_modules/@types/
+server/node_modules/@esbuild/
+server/node_modules/esbuild/
+server/node_modules/get-tsconfig/
+server/node_modules/resolve-pkg-maps/
+
+# Config files not needed in bundle
+server/tsconfig.json
+.gitignore
+.env
+server/.env
+.env.example
+
+# Git
+.git/
+
+# MCPB output
+*.mcpb
