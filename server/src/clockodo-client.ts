@@ -191,6 +191,8 @@ export interface Entry {
   time_until: string | null;
   duration: number | null;
   clocked: boolean;
+  hourly_rate?: number;
+  revenue?: number;
   customers_name?: string;
   projects_name?: string;
   services_name?: string;

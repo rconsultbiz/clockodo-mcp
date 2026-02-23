@@ -96,13 +96,16 @@ server.tool(
       const bis = formatDateTime(e.time_until);
       const dauer = formatDuration(e.duration);
       const userName = e.users_name || userMap.get(e.users_id) || String(e.users_id);
+      const rate = e.hourly_rate != null ? `${e.hourly_rate.toFixed(2)} €/h` : "-";
+      const revenue = e.revenue != null ? `${e.revenue.toFixed(2)} €` : "-";
       return (
         `ID: ${e.id} | ${von} - ${bis} | ${dauer}\n` +
         `  Mitarbeiter: ${userName} | ` +
         `Kunde: ${e.customers_name || e.customers_id} | ` +
         `Projekt: ${e.projects_name || e.projects_id || "-"} | ` +
         `Leistung: ${e.services_name || e.services_id}\n` +
-        `  Text: ${e.text || "-"} | Abrechenbar: ${e.billable === 1 ? "Ja" : e.billable === 2 ? "Abgerechnet" : "Nein"}`
+        `  Stundensatz: ${rate} | Betrag: ${revenue} | ` +
+        `Text: ${e.text || "-"} | Abrechenbar: ${e.billable === 1 ? "Ja" : e.billable === 2 ? "Abgerechnet" : "Nein"}`
       );
     });
 
